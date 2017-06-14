@@ -1,0 +1,23 @@
+body{
+  background-image:url("img/rainbow.jpg");
+}
+p{
+    display: flex;
+    justify-content: left;
+    color: purple;
+    font-size: 30px;
+    text-align: center;
+    width: 100%;
+    margin-top: 1%;
+}
+.order{
+    font-size: 10px;
+}.title{
+    font-size: 20px;
+}
+.list{
+    font-size: 15px;
+}
+.footer{
+    margin-top: 39%;
+}
