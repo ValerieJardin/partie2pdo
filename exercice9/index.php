@@ -15,12 +15,23 @@ try {
 if (isset($_POST['delete'])) {
     // Si les champs Numéro de billet, Prix et Numéro de réservation ne sont pas vides
     if (!empty($_POST['ticketId']) && !empty($_POST['price']) && !empty($_POST['bookingsId'])) {
-        // Alors je récupère l'entrée qui est sous forme de tableau (ex : [24, 25])
-        $bookingsId = $_POST['bookingsId'];
+        /** Alors je récupère l'entrée qui est sous forme de tableau (ex : [24, 25]) 
+         * la fonction array_unique() permettant d'afficher [0]=24 et [3]=25 dans la mesure où nous avons [24, 24, 24, 25, 25, 25]
+         * la fonction array_values() permet d'afficher [0]=24 et [1]=25. * */
+        $bookingsId = array_values(array_unique($_POST['bookingsId']));
         /** Requête pour supprimer des billets en fonction de leur id. 
-         * La boucle foreach à l'intérieur du IN() permet de récupérer les numéros de réservation de chaque formulaire (24 puis 25 dans notre cas).
-         * ".=" est équivalent à "$queryDeletion = $queryDeletion . (concaténation) ')';  **/
-        $queryDeletion = 'DELETE FROM `tickets` WHERE `id` IN (?'; foreach ($bookingsId as $bookingId){$queryDeletion .= ', ?'; } $queryDeletion .= ')';
+         * La boucle foreach à l'intérieur du IN() permet de récupérer les numéros de réservation de chaque formulaire (24 puis 25 dans notre cas).* */
+        $queryDeletion = 'DELETE FROM `tickets` WHERE `bookingsId` IN (';
+        // Déclaration d'une variable chaîne vide 
+        $numberOfBookings = '';
+        // Pour chaque [n] nous ajoutons "?,espace"
+        foreach ($bookingsId as $bookingId) {
+            $numberOfBookings .= '?, ';
+        }
+        // r(rigth)trim() est une fonction qui supprime la dernière virgule et le dernier espace à droite
+        $numberOfBookings = rtrim($numberOfBookings, ', ');
+        // Concaténation de la requête avec $numberOfBookings . ')' à l'aide du symbole ".= "
+        $queryDeletion .= $numberOfBookings . ')';
         $prep = $dataBase->prepare($queryDeletion);
         // Boucle permettant de récupérer uniquement le numéro de billet de chaque formulaire (24 puis 25 dans notre cas)
         foreach ($bookingsId as $key => $bookingId) {
@@ -55,17 +66,22 @@ $bookings = $dataBase->query($queryBooking)->fetchAll(PDO::FETCH_OBJ);
         <!--Afficher autant de formulaires que de billets appartenant aux réservations 24 ou 25. Après les formulaires, 
         ajouter un bouton supprimer et supprimer tous ces billets. (Voir image fournie)-->
         <p class="lastName"><strong><u>Formulaire de résiliation :</u></strong></p>
+            <form action="index.php" method="POST">
         <!-- Boucle foreach pour récupérer les clés des clients ligne par ligne. -->
         <?php foreach ($bookings as $key => $booking) { ?>
-            <form action="index.php" method="POST">
                 <p class="form_content col-lg-12"><label class="col-lg-6">Numéro de billet : </label><input class="col-lg-6" type="text" placeholder="Numéro de billet" name="ticketId[<?= $key ?>]" value="<?= $booking->id ?>" required/></p>
                 <p class="form_content col-lg-12"><label class="col-lg-6">Prix : </label><input class="col-lg-6" type="text" placeholder="Prix" name="price[<?= $key ?>]" value="<?= $booking->price ?>" required/></p>
                 <p class="form_content col-lg-12"><label class="col-lg-6">Numéro de réservation : </label><input class="col-lg-6" type="text" placeholder="Numéro de réservation" name="bookingsId[<?= $key ?>]" value="<?= $booking->bookingsId ?>" required/></p>
+                <?php
+            }
+            // Effacer le bouton supprimer lorsque les entrées sont effacées
+            if (count($bookings) > 0) {
+                ?>
+                <p class="form_content col-lg-12"><button type="submit" name="delete" class=" col-lg-offset-6 col-lg-3">Supprimer</button></p>              
             <?php } ?>
-            <p class="form_content col-lg-12"><button type="submit" name="delete" class=" col-lg-offset-6 col-lg-3">Supprimer</button></p>              
         </form>
         <footer>
-            <p class="footer"><?php include '../index.php'; ?></p>
+            <div class="footer"><?php include '../index.php'; ?></div>
         </footer>
     </body>
 </html>

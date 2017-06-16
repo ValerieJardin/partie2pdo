@@ -58,8 +58,13 @@ $bookings = $dataBase->query($queryBooking)->fetchAll(PDO::FETCH_OBJ);
             <form action="index.php" method="POST">
                 <p class="form_content col-lg-12"><label class="col-lg-6">Numéro de réservation : </label><input class="col-lg-6" type="text" placeholder="Numéro de réservation" name="bookingId[<?= $key ?>]" value="<?= $booking->id ?>" required/></p>
                 <p class="form_content col-lg-12"><label class="col-lg-6">Numéro de client : </label><input class="col-lg-6" type="text" placeholder="Nom" name="clientId[<?= $key ?>]" value="<?= $booking->clientId ?>" required/></p>
-            <?php } ?>
-            <p class="form_content col-lg-12"><button type="submit" name="delete" class=" col-lg-offset-6 col-lg-3">Supprimer</button></p>              
+                <?php
+            }
+            // Effacer le bouton supprimer lorsque les entrées sont effacées
+            if (count($bookings) > 0) {
+                ?>
+                <p class="form_content col-lg-12"><button type="submit" name="delete" class=" col-lg-offset-6 col-lg-3">Supprimer</button></p>              
+                <?php } ?>
         </form>
         <footer>
             <p class="footer"><?php include '../index.php'; ?></p>

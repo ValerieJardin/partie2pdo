@@ -61,7 +61,7 @@ try {
             }
         endif;
         ?>
-        <?php if (!isset($_POST['title']) && !isset($_POST['performer']) && !isset($_POST['date']) && !isset($_POST['showTypesId']) && !isset($_POST['firstGendersID']) && !isset($_POST['secondGendersID']) && !isset($_POST['duration']) && !isset($_POST['startTime'])): ?>
+        <?php if (!isset($_POST['title']) && !isset($_POST['performer']) && !isset($_POST['date']) && !isset($_POST['showTypesId']) && !isset($_POST['firstGendersID']) && !isset($_POST['secondGendersID']) && !isset($_POST['duration']) && !isset($_POST['startTime'])){ ?>
             <form action="index.php" method="POST">
                 <p class="form_content col-lg-12"><label for="title" class="col-lg-6">Titre du spectacle : </label><input class="col-lg-6" type="text" placeholder="Titre du spectacle" name="title" required/></p>
                 <p class="form_content col-lg-12"><label for="performer" class="col-lg-6">Nom de l'artiste : </label><input class="col-lg-6" type="text" placeholder="Nom de l'artiste" name="performer" required/></p>
@@ -115,7 +115,7 @@ try {
                 <p class="form_content col-lg-12"><label for="starttime" class="col-lg-6">Heure de début du spectacle hh:mm:ss : </label><input class="col-lg-6" type="time" placeholder="Heure de début du spectacle hh:mm:ss" name="startTime"/></p>
                 <p class="form_content col-lg-12"><button type="submit" name="valider" class=" col-lg-offset-6 col-lg-3">Envoyer</button></p>
             </form>
-        <?php endif; ?>
+        <?php } ?>
         <footer>
             <p class="footer"><?php include '../index.php'; ?></p>
         </footer>
